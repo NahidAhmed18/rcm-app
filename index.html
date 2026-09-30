@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>RCM Traders</title>
+<meta name="theme-color" content="#1e293b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RCM">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--a:#4f46e5;--navy:#1e293b;--bg:#f1f5f9;--card:#fff;--line:#e2e8f0;--muted:#64748b;--green:#15803d;--red:#b91c1c;--amber:#b45309}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:Inter,-apple-system,Arial,sans-serif;background:var(--bg);color:#0f172a;-webkit-font-smoothing:antialiased}
+header{background:var(--navy);color:#fff;padding:calc(16px + env(safe-area-inset-top)) 16px 14px;position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:12px}
+header img{width:38px;height:38px;border-radius:10px}header h1{margin:0;font-size:19px;font-weight:800}header p{margin:2px 0 0;color:#cbd5e1;font-size:12px}
+header .rf{margin-left:auto;background:rgba(255,255,255,.12);border:0;color:#fff;border-radius:10px;padding:8px 10px;font-size:16px}
+.strip{height:4px;background:var(--a)}
+main{padding:14px 14px calc(96px + env(safe-area-inset-bottom));max-width:760px;margin:0 auto}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:var(--card);border-radius:14px;padding:12px 14px;border:1px solid var(--line);border-left:5px solid var(--c,#475569)}
+.kpi .l{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--c,#475569);text-transform:uppercase}
+.kpi .v{font-size:24px;font-weight:800;margin:4px 0 2px}.kpi .s{font-size:11px;color:var(--muted)}
+h2{font-size:14px;margin:22px 2px 10px;color:var(--navy);display:flex;align-items:center;gap:8px}
+h2:before{content:'';width:4px;height:16px;border-radius:2px;background:var(--a)}
+.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.act{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 6px;text-align:center;font-size:12px;font-weight:600;color:#334155;cursor:pointer}
+.act b{display:block;font-size:22px;margin-bottom:4px}.act:active{transform:scale(.97);background:#eef2ff}
+.list{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-top:1px solid var(--line);gap:10px}
+.row:first-child{border-top:0}.row .t{font-weight:700}.row .sub{font-size:12px;color:var(--muted);margin-top:2px}.row .r{text-align:right;font-weight:700;white-space:nowrap}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;margin-top:4px}
+.pos{color:var(--green)}.neg{color:var(--red)}.amb{color:var(--amber)}.empty{padding:14px;color:var(--muted);font-size:13px}
+.tabs{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;z-index:6;padding-bottom:env(safe-area-inset-bottom)}
+.tabs button{flex:1;border:0;background:none;padding:10px 0 12px;font:600 11px Inter,Arial;color:var(--muted)}.tabs button.on{color:var(--a)}
+.tabs button b{display:block;font-size:20px}
+.sheet{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;z-index:10;align-items:flex-end;justify-content:center}
+.sheet.on{display:flex}.panel{background:#fff;width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:18px 16px calc(28px + env(safe-area-inset-bottom))}
+.panel h3{margin:0 0 4px;font-size:18px}.panel .i{color:var(--muted);font-size:13px;margin:0 0 8px}
+label{display:block;font-weight:600;font-size:12px;margin:12px 0 5px;color:#334155}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:10px;font:16px Inter,Arial;background:#fff;color:#0f172a}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--a);box-shadow:0 0 0 3px #e0e7ff}
+.btn{margin-top:16px;width:100%;padding:14px;border:0;border-radius:12px;background:var(--a);color:#fff;font:700 15px Inter,Arial}
+.btn.g{background:#fff;color:var(--a);border:1px solid var(--a);margin-top:8px;padding:10px;font-size:13px}
+.x{float:right;border:0;background:#f1f5f9;border-radius:50%;width:32px;height:32px;font-size:18px}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 16px;border-radius:12px;font-size:13px;display:none;z-index:20;max-width:90%}
+.msg{margin-top:10px;font-size:13px}.req{color:var(--red)}.load{padding:40px;text-align:center;color:var(--muted)}
+/* connect screen */
+#connect{display:none;padding:calc(40px + env(safe-area-inset-top)) 20px 30px;max-width:480px;margin:0 auto;text-align:center}
+#connect img{width:110px;height:110px;border-radius:26px;box-shadow:0 12px 30px rgba(30,41,59,.25)}
+#connect h1{font-size:28px;margin:18px 0 6px}#connect p.s{color:var(--muted);margin:0 0 18px}
+.steps{background:#fff;border-radius:16px;padding:14px 16px;text-align:left;font-size:14px;color:#334155;border:1px solid var(--line)}
+.steps div{display:flex;gap:10px;margin:8px 0}.steps b.n{flex:0 0 24px;height:24px;border-radius:50%;background:#eef2ff;color:var(--a);display:flex;align-items:center;justify-content:center;font-size:12px}
+#connect label{text-align:left}
+.link{background:none;border:0;color:var(--muted);font-size:12px;margin-top:18px;text-decoration:underline}
+</style></head><body>
+
+<div id="connect">
+  <img src="icon-512.png" alt="">
+  <h1>RCM Traders</h1>
+  <p class="s">Connect to your RCM sheet once on this phone.</p>
+  <div class="steps">
+    <div><b class="n">1</b><span>In the sheet: <b>Extensions → Apps Script</b>. Set your PIN in <b>APP_PIN</b> at the top of the script and save.</span></div>
+    <div><b class="n">2</b><span><b>Deploy → New deployment → Web app</b>. Execute as <b>Me</b>, access <b>Anyone</b>.</span></div>
+    <div><b class="n">3</b><span>Copy the URL ending in <b>/exec</b> and paste it below with your PIN.</span></div>
+  </div>
+  <label>Web app URL</label><input id="cUrl" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off">
+  <label>PIN</label><input id="cPin" type="password" placeholder="Your APP_PIN" autocomplete="off">
+  <button class="btn" id="cBtn">Connect</button>
+  <div class="msg" id="cMsg"></div>
+</div>
+
+<div id="app" style="display:none">
+  <header><img src="icon-192.png" alt=""><div><h1 id="ttl">RCM Traders</h1><p id="upd">Loading…</p></div><button class="rf" onclick="load(true)">⟳</button></header>
+  <div class="strip"></div>
+  <main id="main"><div class="load">Loading your figures…</div></main>
+  <nav class="tabs"><button class="on" data-v="home"><b>🏠</b>Home</button><button data-v="cars"><b>🚗</b>Cars</button><button data-v="add"><b>➕</b>Add</button><button data-v="money"><b>💷</b>Money</button></nav>
+</div>
+<div class="sheet" id="sheet"><div class="panel" id="panel"></div></div><div class="toast" id="toast"></div>
+
+<script>
+const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
+let URL_=store.get('rcm_url'),PIN=store.get('rcm_pin'),D=null,view='home';
+async function api(action,extra){
+  const r=await fetch(URL_,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({pin:PIN,action},extra||{}))});
+  let j;try{j=await r.json()}catch(e){throw new Error('Could not reach your sheet. Check the link is the /exec one and access is "Anyone".')}
+  if(!j.ok)throw new Error(j.error||'Something went wrong');return j.result;}
+const gbp=v=>(v<0?'-':'')+'£'+Math.abs(v||0).toLocaleString('en-GB',{maximumFractionDigits:0});
+const cls=v=>v>0?'pos':v<0?'neg':'';
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',3500);}
+
+/* ---------- connect ---------- */
+function showConnect(msg){document.getElementById('app').style.display='none';document.getElementById('connect').style.display='block';
+  document.getElementById('cUrl').value=URL_||'';document.getElementById('cMsg').innerHTML=msg?'<span class="neg">'+esc(msg)+'</span>':'';}
+document.getElementById('cBtn').onclick=async()=>{
+  const u=document.getElementById('cUrl').value.trim(),p=document.getElementById('cPin').value.trim(),m=document.getElementById('cMsg');
+  if(!/^https:\/\/script\.google\.com\/.+\/exec$/.test(u))return m.innerHTML='<span class="neg">Paste the Web app link — it starts with https://script.google.com and ends with /exec</span>';
+  if(!p)return m.innerHTML='<span class="neg">Enter your PIN.</span>';
+  URL_=u;PIN=p;m.textContent='Connecting…';
+  try{await api('ping');store.set('rcm_url',u);store.set('rcm_pin',p);startApp();}
+  catch(e){m.innerHTML='<span class="neg">'+esc(e.message)+'</span>';}
+};
+function startApp(){document.getElementById('connect').style.display='none';document.getElementById('app').style.display='block';load();}
+
+/* ---------- app ---------- */
+async function load(manual){if(manual)toast('Refreshing…');
+  try{D=await api('data');document.documentElement.style.setProperty('--a',D.accent);
+    document.getElementById('ttl').textContent=D.title;document.getElementById('upd').textContent='Updated '+D.updated;render();if(manual)toast('Up to date');}
+  catch(e){if(/PIN/i.test(e.message))return showConnect(e.message);document.getElementById('main').innerHTML='<div class="load">'+esc(e.message)+'</div>';}}
+function kpi(l,v,s,c,vc){return '<div class="kpi" style="--c:'+c+'"><div class="l">'+l+'</div><div class="v '+(vc||'')+'">'+v+'</div><div class="s">'+s+'</div></div>'}
+function badge(s){const c=(D.statusColours[s]||['#f1f5f9','#334155']);return '<span class="badge" style="background:'+c[0]+';color:'+c[1]+'">'+esc(s)+'</span>'}
+function carRow(c){return '<div class="row"><div><div class="t">'+esc(c.reg)+'</div><div class="sub">'+esc(c.name)+'</div>'+badge(c.status)+'</div><div class="r">'+(c.status==='Sold'?'<span class="'+cls(c.profit)+'">'+gbp(c.profit||0)+'</span><div class="sub">sold '+gbp(c.soldFor)+'</div>':gbp(c.invest)+'<div class="sub">'+(c.listing?'listed '+gbp(c.listing)+' · ':'')+(c.days!=null?c.days+' days':'')+'</div>')+'</div></div>'}
+const ACTS={
+ home:[['buyCar','🚗','Buy car'],['repair','🛠️','Repair'],['sellCar','💷','Sell car'],['carCost','🧾','Add cost'],['expense','👛','Expense'],['startRental','🔑','Rental']],
+ add:[['buyCar','🚗','Buy a car'],['sellCar','💷','Sell a car'],['setStatus','🔄','Change status'],['fillFromReg','🔍','Fill from reg'],
+      ['repair','🛠️','Repair / service'],['carCost','🧾','Add car cost'],['editCost','✏️','Edit / delete cost'],
+      ['startRental','📅','Start rental'],['rentalPayment','💵','Rent payment'],['endRental','🏁','End rental'],
+      ['expense','👛','Business expense'],['income','💰','Other income'],['settle','💸','Pay someone back'],['reimburse','✅','Mark reimbursed'],['addContact','📇','Add contact']]};
+function acts(list){return '<div class="acts">'+list.map(a=>'<div class="act" onclick="openForm(\''+a[0]+'\')"><b>'+a[1]+'</b>'+a[2]+'</div>').join('')+'</div>'}
+function render(){const k=D.kpi,m=document.getElementById('main');let h='';
+ if(view==='home'){
+  h+='<div class="grid">'+kpi('Profit / loss',gbp(k.profit),'Sales '+gbp(k.salesProfit)+' · Rentals '+gbp(k.rentalProfit),'#15803d',cls(k.profit))
+   +kpi('Money owed',gbp(k.owed),'To Mahfuz & Nahid','#b91c1c',k.owed>0?'neg':'')
+   +kpi('Cars in stock',k.inStock,k.sold+' sold · '+k.totalCars+' total','#2563eb')
+   +kpi('Investment',gbp(k.investment),'In unsold cars','#475569')
+   +kpi('Sales',gbp(k.sales),'Cars sold','#4f46e5')
+   +kpi('Rentals',k.activeRentals,gbp(k.rentOwed)+' rent owed to us','#0d9488')+'</div>';
+  h+='<h2>Quick add</h2>'+acts(ACTS.home);
+  h+='<h2>MOT due soon</h2><div class="list">'+(D.mots.length?D.mots.map(c=>'<div class="row"><div><div class="t">'+esc(c.reg)+'</div><div class="sub">'+esc(c.name)+'</div></div><div class="r '+(c.motDays<0?'neg':'amb')+'">'+(c.motDays<0?'EXPIRED':esc(c.mot))+'<div class="sub">'+(c.motDays<0?'':c.motDays+' days')+'</div></div></div>').join(''):'<div class="empty">Nothing due in the next 60 days 👍</div>')+'</div>';
+  h+='<h2>Cars in stock</h2><div class="list">'+(D.cars.filter(c=>c.status!=='Sold').map(carRow).join('')||'<div class="empty">No cars in stock</div>')+'</div>';
+ } else if(view==='cars'){
+  h+='<h2>All cars</h2><div class="list">'+(D.cars.map(carRow).join('')||'<div class="empty">No cars yet</div>')+'</div>';
+ } else if(view==='add'){ h+='<h2>What do you want to do?</h2>'+acts(ACTS.add);
+  h+='<button class="link" onclick="if(confirmDisconnect())showConnect()">Disconnect this phone</button>';
+ } else if(view==='money'){
+  h+='<div class="grid">'+kpi('Profit / loss',gbp(k.profit),'After '+gbp(k.business)+' business costs','#15803d',cls(k.profit))+kpi('Money owed',gbp(k.owed),'To partners','#b91c1c',k.owed>0?'neg':'')+'</div>';
+  h+='<h2>Who is owed what</h2><div class="list">'+(D.owed.length?D.owed.map(o=>'<div class="row"><div><div class="t">'+esc(o.who)+'</div><div class="sub">'+o.items+' item'+(o.items===1?'':'s')+'</div></div><div class="r neg">'+gbp(o.amt)+'</div></div>').join(''):'<div class="empty">Nobody is owed anything 👍</div>')+'</div>';
+  h+='<div style="margin-top:10px">'+acts([['settle','💸','Pay back'],['reimburse','✅','Mark one'],['expense','👛','Expense']])+'</div>';
+  h+='<h2>Active rentals</h2><div class="list">'+(D.rentals.length?D.rentals.map(r=>'<div class="row"><div><div class="t">'+esc(r.reg)+' · '+esc(r.customer)+'</div><div class="sub">'+esc(r.car)+' · paid '+gbp(r.paid)+'</div></div><div class="r '+(r.owed>0?'neg':'pos')+'">'+gbp(r.owed)+'</div></div>').join(''):'<div class="empty">No active rentals</div>')+'</div>';
+ }
+ m.innerHTML=h;}
+function confirmDisconnect(){store.del('rcm_pin');PIN=null;return true}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');view=b.dataset.v;if(D)render();window.scrollTo(0,0);});
+function closeSheet(){document.getElementById('sheet').classList.remove('on')}
+document.getElementById('sheet').onclick=e=>{if(e.target.id==='sheet')closeSheet()};
+async function openForm(key){toast('Opening…');
+  try{const r=await api('form',{key});document.getElementById('toast').style.display='none';if(r.alert)return toast(r.alert);showSpec(r.spec);}catch(e){toast(e.message)}}
+function showSpec(P){const p=document.getElementById('panel');const t=new Date(),iso=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');
+ p.innerHTML='<button class="x" onclick="closeSheet()">×</button><h3>'+esc(P.title)+'</h3><p class="i">'+esc(P.intro||'')+'</p><form id="f"></form><div class="msg" id="msg"></div>';
+ const f=document.getElementById('f');
+ P.fields.forEach((x,i)=>{
+  if(x.type==='hidden'){const h=document.createElement('input');h.type='hidden';h.name=x.name;h.value=x.value||'';f.appendChild(h);return;}
+  const l=document.createElement('label');l.innerHTML=esc(x.label)+(x.required?' <span class="req">*</span>':'');f.appendChild(l);let el;
+  if(x.type==='select'){el=document.createElement('select');(x.options||[]).forEach(o=>{const op=document.createElement('option');if(typeof o==='object'){op.value=o.value;op.textContent=o.label}else{op.value=o;op.textContent=o||'—'}el.appendChild(op)})}
+  else if(x.type==='textarea'){el=document.createElement('textarea');el.rows=3}
+  else{el=document.createElement('input');if(x.type==='number'){el.type='number';el.step='0.01';el.inputMode='decimal'}else if(x.type==='date'){el.type='date';if(!x.blank)el.value=iso}else el.type='text';
+   if(x.type==='list'){const dl=document.createElement('datalist');dl.id='dl'+i;(x.options||[]).forEach(o=>{const op=document.createElement('option');op.value=o;dl.appendChild(op)});f.appendChild(dl);el.setAttribute('list','dl'+i);el.autocomplete='off'}}
+  el.name=x.name;if(x.required)el.required=true;if(x.value!=null&&x.value!=='')el.value=x.value;
+  if(x.upper)el.addEventListener('input',()=>{el.value=el.value.toUpperCase()});f.appendChild(el);
+  if(x.lookup){const b=document.createElement('button');b.type='button';b.className='btn g';b.textContent='🔍 Look up reg & fill details';const st=document.createElement('div');st.className='msg';f.appendChild(b);f.appendChild(st);
+   b.onclick=async()=>{if(!el.value.trim())return st.textContent='Type the reg first.';st.textContent='Looking up…';
+    try{const v=await api('lookup',{reg:el.value});['make','model','colour','mileage','mot','fuel','engine','ulez'].forEach(n=>{const i=f.elements[n];if(i&&v[n]!==undefined&&v[n]!==''&&v[n]!==null)i.value=v[n]});st.innerHTML='<span class="pos">✓ '+esc([v.colour,v.make,v.model].filter(Boolean).join(' '))+'</span>'}
+    catch(e){st.innerHTML='<span class="neg">'+esc(e.message)+'</span>'}}}
+ });
+ const b=document.createElement('button');b.className='btn';b.textContent=P.submitLabel||'Save';f.appendChild(b);
+ f.onsubmit=async e=>{e.preventDefault();const d={};new FormData(f).forEach((v,k)=>d[k]=String(v).trim());b.disabled=true;b.textContent='Saving…';
+  try{const r=await api('submit',{form:P.action,data:d});if(r.spec)return showSpec(r.spec);closeSheet();toast(r.msg||'Saved');load();}
+  catch(err){document.getElementById('msg').innerHTML='<span class="neg">'+esc(err.message)+'</span>';b.disabled=false;b.textContent=P.submitLabel||'Save';}};
+ document.getElementById('sheet').classList.add('on');}
+
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+if(URL_&&PIN)startApp();else showConnect();
+</script>
+</body></html>
